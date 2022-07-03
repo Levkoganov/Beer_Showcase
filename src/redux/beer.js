@@ -8,6 +8,7 @@ const initialState = {
   favoriteBeers: [], // Favorite beers
   numberOfBeers: 0, // Number of beers (for pagination) 
   isSearching: false, // If (isSearch = true) Hide pagination
+  isLoading: false
 };
 
 const beerSlice = createSlice({
@@ -43,12 +44,20 @@ const beerSlice = createSlice({
   extraReducers(builder) {
     builder
       // GetBeers by page and number of items
-      .addCase(getBeers.fulfilled, (state, action) => {
-        state.beers = action.payload;
+      .addCase(getBeers.pending, (state, action) => {
+        state.isLoading = true;
         state.isSearching = false;
+      })
+      .addCase(getBeers.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.beers = action.payload;
       })
 
       // GetBeerByFoodName
+      .addCase(getBeerByFoodName.pending, (state, action) => {
+        state.isSearching = false;
+      })
+
       .addCase(getBeerByFoodName.fulfilled, (state, action) => {
         state.beers = action.payload;
         state.isSearching = true;
