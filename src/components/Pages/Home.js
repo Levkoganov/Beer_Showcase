@@ -1,5 +1,5 @@
 // Dependncies
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Container, Box } from "@mui/material";
 
@@ -17,14 +17,12 @@ function Home() {
   const itemsPerPage = 6; // ItemPerPAge
 
   // Redux state
-  const { beers, isSearching } = useSelector((state) => state.allbeers);
-  const [loading, isLoading] = useState(false); // Loading state
+  const { beers, isSearching, isLoading } = useSelector((state) => state.allbeers);
 
   useEffect(() => {
     // Get beers
     dispatch(getBeers({page: currentPage, perPage: itemsPerPage}));
-    isLoading(true); // loaded
-
+    
     // Get number of beers (for Pagination)
     dispatch(getTotalBeersNumber()); 
   }, [dispatch]);
@@ -36,7 +34,7 @@ function Home() {
         {/* Search (component) */}
         <SearchBeer currentPage={currentPage} itemsPerPage={itemsPerPage}/>
           {/* BeerGrid (component) */}
-          {loading ? <BeerGrid beers={beers} /> : "loading..."}
+          {isLoading ? "loading..." : <BeerGrid beers={beers} />}
           {/* Pagination (component) */}
           {!isSearching && <Pagination currentPage={currentPage} itemsPerPage={itemsPerPage}/>}
           
